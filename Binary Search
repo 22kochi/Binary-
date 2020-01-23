@@ -5,182 +5,203 @@ import java.io.FileNotFoundException;
 import java.util.Arrays;
 
 /** Heading  *****************************************************/
-/*	Your name: Andrew Kochi	
-	Class block: G Block				Date Started: 12/10/2019
-	Lab Number: 6
-	Title: Binary Search
-	Purpose: Write a program that performs a binary search on a sorted array using the Arrays class
+/* Your name: Andrew Kochi
+Class block: G Block Date Started: 12/10/2019
+Lab Number: 6
+Title: Binary Search
+Purpose: Write a program that performs a binary search on a sorted array using the Arrays class
 */
 
-public class Lab6 
+public class Lab6
 {
-	private static Scanner input;		// Declaring a class Scanner
-	
-	
-	public void Binary(int[] list) {
-		System.out.println("\nWhat entry?");
-		int entry = input.nextInt();
-		//conducts binary search
-		int index = Arrays.binarySearch(list, entry);
-		
-		//prints out status
-		if(index < 0)
-			System.out.println("status: not found");
-		else
-			System.out.println("status: found at index " + index + ".");
-			
-	}
-	
-	public	static int myIterativeSearch(int[] list, int n) {
-		
-		int index = -1;
-		int from = 0;
-		int to = list.length;
-		int mid = -1;
-		int probe =  0;
-		do {
-			//System.out.println("mid " + index);
-			mid = ((to - from) / 2) + from;
-			if(list[mid] > n)
-				to = mid;
-			else if(list[mid] < n)
-				from = mid;
-			else if(list[mid] == n)
-				index = mid;
-			probe ++;
-		}while(index < 0 && to > from+1);
-		if(index < 0) {
-			System.out.println("status: not found");
-		}
-		else{
-			System.out.println("iterative status: found at index " + index + " after " + probe + " probes.");
-		}
-		return probe;
-		
-	}
-	
-	public static int myRecursiveSearch(int[] list, int to, int from, int n) {
-		int mid = (to - from) / 2 + from;
-		int probes = 1;
-		//base case
-		if (to <= from+1) {
-			System.out.print("status: not found");
-			return -42;
-		}
-		//searches first half
-		else if(list[mid] > n) {
-			probes += myRecursiveSearch(list, mid, from, n);
-			return probes;
-		}
-		//searches second half
-		else if(list[mid] < n) {
-			probes += myRecursiveSearch(list, to, mid, n);
-			return probes;
-		}
-		else
-			System.out.print("recursive status: found at index " + mid);
-			return probes;
-	}
-	
-	public static void fileMethod()
+    private static Scanner input; // Declaring a class Scanner
 
-	{
-	String pathname = "Lab6TestData.txt";
-	File file = new File(pathname);
-	Scanner input = null;
-	try
-	{
-	input = new Scanner(file);
-	}
-	catch (FileNotFoundException ex)
-	{
-	System.out.println("*** Cannot open " + pathname + " ***");
-	System.exit(1);
-	}
-	int size = input.nextInt(); // Size of array
-	int[] list = new int[size]; // Declare array
-	for (int x = 0; x < size; x++) // Fill array
-	list[x] = input.nextInt();
-	while (input.hasNextInt()) // Loop Menu
-	{
 
-	int probes;
-	int val;
-	switch (input.nextInt())
-	{
-	case 1://if 1 run iterative
-	val = input.nextInt();
-	probes = myIterativeSearch(list, val);
-	System.out.println("number of probes: "+probes);
+    //Built in binary search
+    public void Binary(int[] list) {
+        System.out.println("\nWhat entry?");
+        int entry = input.nextInt();
+        //conducts binary search
+        int index = Arrays.binarySearch(list, entry);
 
-	case 2: // if 2 run recursive
-	val = input.nextInt();
-	probes = myRecursiveSearch(list, 0, list.length, val);
-	System.out.print("number of probeS: "+probes);
-	}
-	}
-	}
-	
-	public Lab6()
-	{
-		input = new Scanner(System.in);	// Initializing the Scanner
-		
-		Random generator = new Random(); //Initialize RNG
-		
-		
-		//declare array w/ length 20-50
-		/////
-		int length = generator.nextInt(31) + 20;
-		int array[] = new int[length];
-		
-		//fill each element w/ random number 0-99
-		for(int i = 0; i < length; i++) {
-			array[i] = generator.nextInt(100);
-		}	
-	
-		//prints unsorted
-		System.out.println("Original array of " + array.length + " elements:");
-		for(int i = 0; i < array.length; i++) {
-			if(i%10 == 0)
-				System.out.print("\n");
-			System.out.printf("%5d", array[i] );
-		}
-		
-		//sorts array
-		Arrays.sort(array);
-		
-		//prints sorted
-		System.out.println("\n \nSorted array of " + array.length + " elements:");
-		for(int i = 0; i < array.length; i++) {
-			if(i%10 == 0)
-				System.out.print("\n");
-			System.out.printf("%5d", array[i] );
-		}
-		
-		//Binary(array);
-		for(int i = 0; i<2;i++) {
-		System.out.println("\n\nWhat entry?");
-		int n = input.nextInt();
-		int probes = 0;
-		myIterativeSearch(array, n);
-		probes = myRecursiveSearch(array, array.length, 0, n);
-		if(probes>0)
-			System.out.print(" after " + probes +" probes");
-		}
-		}
+        //prints out status
+        if(index < 0)
+            System.out.println("status: not found");
+        else
+            System.out.println("status: found at index " + index + ".");
 
-	public void menu()
-	{		
-		// See menu hand-out 
-		// Get input and call other appropriate functions	
-	}
-	
-	// Write additional functions down here
-	
-public static void main(String[] args) 
-{
-		new Lab6();
-	}
+    }
+
+    public static int myIterativeSearch(int[] list, int n) {
+        int index = -1;
+
+        int from = 0;
+        int to = list.length - 1;
+        int mid = -1;
+        int probe =  0;
+        ////Changed while loop statement
+        while(from <= to) {
+            //System.out.println("mid " + index);
+            mid = (to + from) / 2;
+            if(list[mid] > n)
+                to = mid - 1;
+            else if(list[mid] < n)
+                from = mid + 1;
+            else if(list[mid] == n) {
+                index = mid;
+                break;
+            }
+            probe ++;
+        }
+        if(index < 0) {
+            System.out.println("\nstatus: not found, probes is: " + probe);
+        }
+        else{
+            System.out.println("\niterative status: found at index " + index + " after " + probe + " probes.");
+        }
+        return probe;
+
+    }
+
+    public static int myRecursiveSearch(int[] list, int to, int from, int n, int probes) {
+
+        int mid = (from + to) / 2;
+        //base case
+        if (to < from) {
+            System.out.println("status: not found, probes is: " + probes);
+            return -1;
+        }
+
+        //searches first half
+        else if(list[mid] > n) {
+            probes = myRecursiveSearch(list, mid - 1, from, n, probes + 1);
+            return probes;
+        }
+        //searches second half
+        else if(list[mid] < n) {
+            probes = myRecursiveSearch(list, to, mid + 1, n, probes + 1);
+            return probes;
+        }
+        else {
+            System.out.println("recursive status: found at index " + mid);
+            return probes;
+        }
+    }
+
+    public static void fileMethod()
+
+    {
+        String pathname = "Lab6TestData.txt";
+        File file = new File(pathname);
+        Scanner input = null;
+        try
+        {
+            input = new Scanner(file);
+        }
+        catch (FileNotFoundException ex)
+        {
+            System.out.println("*** Cannot open " + pathname + " ***");
+            System.exit(1);
+        }
+        int size = input.nextInt(); // Size of array
+        int[] list = new int[size]; // Declare array
+        for (int x = 0; x < size; x++) // Fill array
+            list[x] = input.nextInt();
+        while (input.hasNextInt()) // Loop Menu
+        {
+
+            int probes;
+            int val;
+            switch (input.nextInt())
+            {
+                case 1://if 1 run iterative
+                    val = input.nextInt();
+                    probes = myIterativeSearch(list, val);
+                    System.out.println("number of probes: "+probes);
+
+                case 2: // if 2 run recursive
+                    val = input.nextInt();
+                    probes = myRecursiveSearch(list, 0, list.length - 1, val, 0);
+                    System.out.print("number of probeS: "+probes);
+            }
+        }
+    }
+
+    public Lab6()
+    {
+        input = new Scanner(System.in); // Initializing the Scanner
+
+        Random generator = new Random(); //Initialize RNG
+
+
+        //declare array w/ length 20-50
+        /////
+        int length = generator.nextInt(31) + 20;
+        int array[] = new int[length];
+
+        //fill each element w/ random number 0-99
+        for(int i = 0; i < length; i++) {
+            array[i] = generator.nextInt(100);
+        }
+
+        //prints unsorted
+        System.out.println("Original array of " + array.length + " elements:");
+        for(int i = 0; i < array.length; i++) {
+            if(i%10 == 0)
+                System.out.print("\n");
+            System.out.printf("%5d", array[i] );
+        }
+
+        //sorts array
+        Arrays.sort(array);
+
+        //prints sorted
+        System.out.println("\n \nSorted array of " + array.length + " elements:");
+        for(int i = 0; i < array.length; i++) {
+            if(i%10 == 0)
+                System.out.print("\n");
+            System.out.printf("%5d", array[i] );
+        }
+
+        ////Changed to loop twice through all three functions
+        //loop through all searches twice
+        for(int j = 0; j < 2; j ++) {
+        //built in 
+        System.out.println("\n\nBuilt-in Binary Search: ");
+        Binary(array);
+        
+        //Iterative
+        System.out.println("\nMy iterative Binary Search: ");
+        System.out.println("\n\nWhat entry?");
+        int n = input.nextInt();
+        myIterativeSearch(array, n);
+        
+        //Recursive
+        System.out.println("\nMy recursive Binary Search: ");
+        System.out.println("\n\nWhat entry?");
+        n = input.nextInt();
+        int probes = 0;
+        probes = myRecursiveSearch(array, array.length - 1, 0, n, 0);
+        if(probes>0) {
+            System.out.print(" after " + probes +" probes");
+        }
+        }
+        
+        //// Changed to call fileMethod()
+        fileMethod();
+    }
+        
+
+    public void menu()
+    {
+        // See menu hand-out
+        // Get input and call other appropriate functions
+    }
+
+    // Write additional functions down here
+
+    public static void main(String[] args)
+    {
+        new Lab6();
+    }
 }
-
-
